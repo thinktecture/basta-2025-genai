@@ -67,10 +67,11 @@ export class Todo implements OnInit {
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userPrompt },
     ];
-    const chunks = await this.engine!.chat.completions.create({ messages, stream: true });
+    const chunks = await this.engine!.chat.completions.create({ messages, stream: true, stream_options: { include_usage: true } });
     let reply = '';
     for await (const chunk of chunks) {
       reply += chunk.choices[0]?.delta.content ?? '';
+      console.log(chunk.usage);
       yield reply;
     }
   }
