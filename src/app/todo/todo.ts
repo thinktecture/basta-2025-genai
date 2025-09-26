@@ -57,7 +57,10 @@ export class Todo implements OnInit {
   async* inferWebLLM(userPrompt: string): AsyncGenerator<string> {
     // LAB #3, #7, #8, #9
     await this.engine!.resetChat();
+    const systemPrompt = `Here's the user's todo list:
+      ${this.todos().map(todo => `* ${todo.text} (${todo.done ? 'done' : 'not done' })`).join('\n')}`;
     const messages: ChatCompletionMessageParam[] = [
+      { role: 'system', content: systemPrompt },
       { role: 'user', content: userPrompt },
     ];
     const chunks = await this.engine!.chat.completions.create({ messages, stream: true });
