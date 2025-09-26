@@ -11,4 +11,11 @@ import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 })
 export class Form {
   // LAB #13, #14, #15, #16, #17
+  private fb = inject(NonNullableFormBuilder);
+  protected formGroup = this.fb.group({
+    name: '',
+    city: '',
+  });
+  
+  async fillForm(value: string) {}
 }
