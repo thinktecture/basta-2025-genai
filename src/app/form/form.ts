@@ -14,14 +14,16 @@ export class Form {
   private fb = inject(NonNullableFormBuilder);
   protected formGroup = this.fb.group({
     name: '',
+    addressLine1: '',
     city: '',
+    insuranceNumber: '',
   });
 
   async fillForm(value: string) {
     const languageModel = await LanguageModel.create({
       initialPrompts: [{
         role: 'system',
-        content: `Extract the information to a JSON object of this shape: ${JSON.stringify(this.formGroup.value)}`,
+        content: `Extract the information to a JSON object.`,
       }],
     });
     const result = await languageModel.prompt(value, {
@@ -30,10 +32,12 @@ export class Form {
         properties: {
           name: { type: 'string' },
           city: { type: 'string' },
+          addressLine1: { type: 'string' },
+          insuranceNumber: { type: 'string' },
         },
       },
     });
-    console.log(result);
+    this.formGroup.setValue(JSON.parse(result));
   }
 
   async paste() {
